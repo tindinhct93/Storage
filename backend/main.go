@@ -1,13 +1,15 @@
 package main
 
 import (
-	"example.com/storerecord/api/routes"
-	db2 "example.com/storerecord/internal/db"
 	"log"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
+	"example.com/storerecord/api/routes"
+	db2 "example.com/storerecord/internal/db"
 )
 
 func main() {
@@ -24,7 +26,12 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	db, err := db2.ConnectToMongoDB("mongodb://localhost:27017")
+	monggodb := os.Getenv("MONGODB_PATH")
+	if monggodb == "" {
+		log.Fatal("Error loading MONGODB_PATH")
+	}
+
+	db, err := db2.ConnectToMongoDB(monggodb)
 	if err != nil {
 		log.Fatal(err)
 	}
