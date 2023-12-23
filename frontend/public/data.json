@@ -1,0 +1,43 @@
+{
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "contact": "0918 367 918",
+      "status": 1,
+      "addresses": [
+        {
+          "id": 1,
+          "street": "123 Main St",
+          "city": "Anytown",
+          "state": "CA",
+          "zip": "12345"
+        },
+        {
+          "id": 2,
+          "street": "456 Elm St",
+          "city": "Anytown",
+          "state": "CA",
+          "zip": "12345"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "contact": "0394 367 918",
+      "status": 1,
+      "addresses": [
+        {
+          "id": 3,
+          "street": "789 Oak St",
+          "city": "Anytown",
+          "state": "CA",
+          "zip": "12345"
+        }
+      ]
+    }
+  ]
+}
