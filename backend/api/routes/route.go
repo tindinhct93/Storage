@@ -9,5 +9,6 @@ func LoadRoutes(r *gin.Engine, db *mongo.Client) {
 	superGroup := r.Group("/api")
 	{
 		LoadReportRoute(superGroup.Group("/report"), db)
+		LoadNotificationRoute(superGroup.Group("/notification"), db)
 	}
 }

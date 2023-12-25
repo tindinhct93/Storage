@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart TV Remote</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            background-color: #3498db;
+            color: #fff;
+            font-size: 24px;
+            text-decoration: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        #messageDisplay {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>Smart TV Remote</h1>
+
+<a href="#" class="button" onclick="callApi('tin')">Tín</a>
+<a href="#" class="button" onclick="callApi('huong')">Hương</a>
+<a href="#" class="button" onclick="callApi('API_ENDPOINT_3')">Button 3</a>
+<a href="#" class="button" onclick="callApi('API_ENDPOINT_4')">Button 4</a>
+
+<div id="messageDisplay">
+    <!-- This is where received messages or information will be displayed -->
+</div>
+
+<script>
+    function callApi(apiEndpoint) {
+        apiurl = location.origin + "/api/notification/" + apiEndpoint;
+        // You can perform any logic or make API requests here
+        console.log("Calling API:", apiurl);
+
+        // Example: Display a message in the message display area
+        displayMessage("API Request Sent: " + apiurl);
+
+        // Example: You can use Fetch API or other methods to make API requests
+        fetch(apiurl, { method: 'GET' })
+            .then(response => {
+                if (!response.ok) {
+                    // Handle non-successful response (status code outside the range 200-299)
+                    throw new Error("Bad Request: The server could not understand the request.");
+                }
+                return response.ok
+            })
+            .then(data => displayMessage("Received response: "+ data))
+            .catch(error => displayMessage("Error: " + error.message));
+
+    }
+
+    function displayMessage(message) {
+        // Display the message in the message display area
+        var messageDisplay = document.getElementById("messageDisplay");
+        messageDisplay.innerHTML = messageDisplay.innerHTML + "<p>" + message + "</p>";
+    }
+</script>
+</body>
+</html>
