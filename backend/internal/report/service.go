@@ -102,7 +102,9 @@ func (ds *ReportService) GetTotalByFilter(ctx context.Context, filter bson.M) (i
 func (ds *ReportService) GetReportByFilter(ctx context.Context, filter bson.M, opt *options.FindOptions) ([]*SendReport, error) {
 	list := make([]*SendReport, 0)
 
-	//opt.Sort = bson.M{}
+	if opt != nil {
+		opt.Sort = bson.M{}
+	}
 	cur, err := ds.Collection.Find(ctx, filter, opt)
 	if err != nil {
 		fmt.Println(err)
