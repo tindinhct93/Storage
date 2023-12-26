@@ -103,7 +103,9 @@ func (ds *ReportService) GetReportByFilter(ctx context.Context, filter bson.M, o
 	list := make([]*SendReport, 0)
 
 	if opt != nil {
-		opt.Sort = bson.M{}
+		opt.Sort = bson.M{
+			"_id": 1,
+		}
 	}
 	cur, err := ds.Collection.Find(ctx, filter, opt)
 	if err != nil {
