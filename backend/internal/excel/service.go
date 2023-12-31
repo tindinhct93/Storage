@@ -2,9 +2,11 @@ package excel
 
 import (
 	"encoding/csv"
-	"example.com/storerecord/internal/report"
-	"github.com/gocarina/gocsv"
 	"strings"
+
+	"github.com/gocarina/gocsv"
+
+	"example.com/storerecord/internal/report"
 )
 
 type IExcel interface {
@@ -41,4 +43,14 @@ func (es *ExcelService) ToReportList(b []byte) ([]*report.Report, error) {
 	}
 
 	return reports, nil
+}
+
+func (es *ExcelService) ToCSV(reports []*report.SendReport) ([]byte, error) {
+	// Use gocsv to write the CSV file
+	csvBytes, err := gocsv.MarshalBytes(reports)
+	if err != nil {
+		return nil, err
+	}
+
+	return csvBytes, nil
 }

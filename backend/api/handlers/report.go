@@ -71,15 +71,7 @@ func (h *ReportHandler) CreateReportFromExcel(c *gin.Context) {
 	h.handleSuccessGet(c, "dummy created")
 }
 
-func (h *ReportHandler) GetReportsByFilter(c *gin.Context) {
-	var body report.ReportRequest
-	if err := c.ShouldBindQuery(&body); err != nil {
-		c.Error(err)
-		return
-	}
-
-	service := report.NewReportService(h.Db)
-
+func getReportFilterFromRoute(body *report.ReportRequest) bson.M {
 	filter := bson.M{}
 	if body.BatchNo == "" && body.MSHH == "" {
 		filter["report_id"] = bson.M{"$regex": fmt.Sprintf("/%d-%d/", body.Month, body.Year), "$options": "i"}
@@ -92,6 +84,57 @@ func (h *ReportHandler) GetReportsByFilter(c *gin.Context) {
 	if body.MSHH != "" {
 		filter["product_code"] = bson.M{"$regex": fmt.Sprintf("%s", body.MSHH), "$options": "i"}
 	}
+
+	if body.IsDept == "true" {
+		filter["borrowed.return_date"] = ""
+	}
+	return filter
+}
+
+func (h *ReportHandler) PrintCSVFromFilter(c *gin.Context) {
+	var body report.ReportRequest
+	if err := c.ShouldBindQuery(&body); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	service := report.NewReportService(h.Db)
+	excelService := &excel.ExcelService{}
+
+	filter := getReportFilterFromRoute(&body)
+	listReport, err := service.GetReportByFilter(c, filter, nil)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	fmt.Println(len(listReport))
+	csv, err := excelService.ToCSV(listReport)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.Data(http.StatusOK, "text/csv", csv)
+}
+
+func (h *ReportHandler) GetReportsByFilter(c *gin.Context) {
+	var body report.ReportRequest
+	if err := c.ShouldBindQuery(&body); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	service := report.NewReportService(h.Db)
+
+	filter := getReportFilterFromRoute(&body)
 
 	limit := int64(20)
 	skip := int64(body.Page-1) * limit

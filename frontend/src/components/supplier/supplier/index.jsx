@@ -129,6 +129,7 @@ export default function Supplier() {
     Year: currentYear,
     MSHH: "",
     BatchNo: "",
+    isDebt: false,
   });
   const [filter, setFilter] = useState(initialFilterStateRef.current);
   //setState logic function
@@ -136,6 +137,30 @@ export default function Supplier() {
     setFilter(initialFilterStateRef.current);
     setShowFilter(!showFilter);
   };
+
+  const handlePrinFile = async () => {
+    try {
+      console.log("Print file");
+      const result = await SupplierAPI.getCSV(
+          filter
+      );
+      const blob = new Blob([result.data], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'example.csv';
+      document.body.appendChild(link);
+      link.click();
+
+      // Remove the link from the document
+      document.body.removeChild(link);
+
+      console.log(result);
+    } catch (e) {
+        console.error(e);
+        alert("Error");
+    }
+
+  }
   const handleRowEdit = (params) => {
     setSelectedRow(params.row);
   };
@@ -253,7 +278,7 @@ export default function Supplier() {
             <Button onClick={handleToggleFilter}>
               <FilterAltIcon />{" "}
             </Button>
-            <Button>+</Button>
+            <Button onClick={handlePrinFile}>+</Button>
           </div>
         </div>
         {showFilter && (

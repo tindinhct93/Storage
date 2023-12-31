@@ -11,6 +11,12 @@ export const SupplierAPI = {
       );
     return params.join("&");
   },
+  getCSV: async function (filters = { status: "active" }) {
+    const filterstring = this.createQueryString(filters);
+    const URL = `${SERVER_PATH}/report/print?${filterstring}`;
+    console.log(URL);
+    return await axios.get(URL);
+  },
   fetchSupplier: async function (
     page = 0,
     limit = 5,

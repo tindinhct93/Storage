@@ -9,6 +9,7 @@ import (
 func LoadReportRoute(route *gin.RouterGroup, db *mongo.Client) {
 	reportHandler := handlers.NewReportHandler(db)
 	route.GET("", reportHandler.GetReportsByFilter)
+	route.GET("/print", reportHandler.PrintCSVFromFilter)
 	route.POST("", reportHandler.CreateReportFromExcel)
 	route.POST("/QA/:id", reportHandler.UpdateQAReceiveForReport)
 	route.POST("/Borrow/:id", reportHandler.BorrowReport)
