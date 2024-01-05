@@ -38,7 +38,7 @@ func (es *ExcelService) ToReportList(b []byte) ([]*report.Report, error) {
 			ProductName: orderItem.ProductName,
 			BatchNo:     orderItem.BatchNo,
 			ReportDate:  orderItem.ReportDate,
-			QMReceived:  true,
+			QMReceived:  false,
 		})
 	}
 
