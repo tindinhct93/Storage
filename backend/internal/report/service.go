@@ -48,9 +48,9 @@ func (ds *ReportService) CreateMany(ctx context.Context, reports []*Report) erro
 		return item.ReportID
 	})
 
-	maxNumber := findMaxValue(reportsNo)
+	maxNumber, monthYear := findFinalValue(reportsNo)
 
-	if err := validateConsecutive(reports, maxNumber); err != nil {
+	if err := validateConsecutive(reports, maxNumber, monthYear); err != nil {
 		return err
 	}
 
@@ -73,19 +73,31 @@ func (ds *ReportService) CreateMany(ctx context.Context, reports []*Report) erro
 		documents = append(documents, report)
 	}
 
+	if len(documents) == 0 {
+		return fmt.Errorf("No new report to import")
+	}
 	_, err = ds.Collection.InsertMany(ctx, documents)
 	return err
 }
 
-func validateConsecutive(reports []*Report, maxNumber int) error {
+func validateConsecutive(reports []*Report, maxValue int, monthYear string) error {
 	for _, report := range reports {
-		if extractNumber(report.ReportID) <= maxNumber {
-			continue
+		reportMonthYear := ExtractMonthYear(report.ReportID)
+		reportNumber := extractNumber(report.ReportID)
+
+		if reportMonthYear != monthYear {
+			if reportNumber != 1 {
+				return fmt.Errorf("The report is not consecutive with the old report")
+			}
+			return nil
 		}
-		if extractNumber(report.ReportID) != maxNumber+1 {
-			return fmt.Errorf("the import report is not consecutive with the old report")
+
+		if reportNumber > maxValue {
+			if reportNumber != maxValue+1 {
+				return fmt.Errorf("the import report is not consecutive with the old report")
+			}
+			return nil
 		}
-		return nil
 	}
 	return nil
 }

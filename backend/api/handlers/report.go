@@ -35,26 +35,34 @@ func (h *ReportHandler) CreateReportFromExcel(c *gin.Context) {
 
 	file, err := c.FormFile("file")
 	if err != nil {
-		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	f, err := file.Open()
 	if err != nil {
-		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 	defer f.Close()
 
 	byte, err := io.ReadAll(f)
 	if err != nil {
-		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	reports, err := excelService.ToReportList(byte)
 	if err != nil {
-		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
@@ -65,7 +73,9 @@ func (h *ReportHandler) CreateReportFromExcel(c *gin.Context) {
 
 	err = service.CreateMany(c, reports)
 	if err != nil {
-		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 	h.handleSuccessGet(c, "dummy created")

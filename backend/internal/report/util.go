@@ -21,20 +21,13 @@ func extractNumber(str string) int {
 	return number
 }
 
-func findMaxValue(arr []string) int {
-	// Initialize max to the minimum possible integer value
-	max := 0
-	// Iterate over the array and find the maximum value
-	for _, value := range arr {
-		num := extractNumber(value)
+func findFinalValue(arr []string) (int, string) {
+	// get the last element of the array
+	lastElement := arr[len(arr)-1]
+	finalValue := extractNumber(lastElement)
+	monthYear := ExtractMonthYear(lastElement)
 
-		// Update max if the current number is larger
-		if num > max {
-			max = num
-		}
-	}
-
-	return max
+	return finalValue, monthYear
 }
 
 func ExtractMonthYear(str string) string {
