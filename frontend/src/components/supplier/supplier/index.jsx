@@ -299,7 +299,7 @@ export default function Supplier() {
           columns={columns}
           rowSelection={false}
           getRowClassName={(params) => {
-            return params.row.borrower === "" ? "highlight" : "";
+            return params.row.borrower === "" ? "" : "highlight";
           }}
           sx={{
             ".highlight": {
