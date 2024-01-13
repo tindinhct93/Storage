@@ -74,7 +74,7 @@ func (h *ReportHandler) CreateReportFromExcel(c *gin.Context) {
 func getReportFilterFromRoute(body *report.ReportRequest) bson.M {
 	filter := bson.M{}
 	if body.BatchNo == "" && body.MSHH == "" {
-		filter["report_id"] = bson.M{"$regex": fmt.Sprintf("/%d-%d/", body.Month, body.Year), "$options": "i"}
+		filter["report_id"] = bson.M{"$regex": fmt.Sprintf("/%02d-%d/", body.Month, body.Year), "$options": "i"}
 		filter["drug_type"] = body.DrugType == 1
 	}
 
