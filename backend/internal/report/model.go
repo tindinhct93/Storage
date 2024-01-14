@@ -38,7 +38,7 @@ type SendReport struct {
 type ReportRequest struct {
 	Page     int    `form:"page"`
 	MSHH     string `form:"MSHH"`
-	BatchNo  string `form:"batch_no"`
+	BatchNo  string `form:"BatchNo"`
 	DrugType int    `form:"drugType"`
 	Month    int    `form:"Month"`
 	Year     int    `form:"Year"`
