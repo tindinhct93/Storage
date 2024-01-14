@@ -89,7 +89,7 @@ func getReportFilterFromRoute(body *report.ReportRequest) bson.M {
 	}
 
 	if body.BatchNo != "" {
-		filter["batch_no"] = body.BatchNo
+		filter["batch_no"] = bson.M{"$regex": fmt.Sprintf("%s", body.BatchNo)}
 	}
 	if body.MSHH != "" {
 		filter["product_code"] = bson.M{"$regex": fmt.Sprintf("%s", body.MSHH), "$options": "i"}
