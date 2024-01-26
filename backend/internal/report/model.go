@@ -42,7 +42,7 @@ type ReportRequest struct {
 	DrugType int    `form:"drugType"`
 	Month    int    `form:"Month"`
 	Year     int    `form:"Year"`
-	IsDept   string `form:"isDebt" binding:"required"`
+	IsDept   string `form:"isDebt"`
 }
 
 type QARequest struct {
